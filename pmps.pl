@@ -7,7 +7,7 @@ use IO::Socket::Multicast;
 use IO::Interface::Simple;
 $/=1;
 
-my ($m_a,$m_p,$size,$l_p) = ('224.0.1.75', 5060, 10240, 1036);
+my ($m_a,$m_p,$size) = ('224.0.1.75', 5060, 10240);
 my ($mif, $srv, $V) = ('', '', 0);
 my %pat = ( mac=>'sip:MAC(.*?)\@', lip=>'Via: SIP.*? ([\d\.]+):', ven=>'vend.r="(.*?)"',
 mod=>'model="(.*?)"', ver=>'version="(.*?)"', to=>'^(To:.*?)$', from=>'^(From:.*?)$',

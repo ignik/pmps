@@ -9,10 +9,10 @@ mod=>'model="(.*?)"', ver=>'version="(.*?)"', to=>'^(To:.*?)$', from=>'^(From:.*
 cid=>'^(Call-ID:.*?)$', via=>'^(Via:.*?)$', cseq=>'^CSeq: (\d+)' );
 
 GetOptions('help'=>sub{pod2usage(-input=>"$0.pod",-exitval=>0,-verbose=>2)},
-"verbose+"=>\$V, "url=s"=>\$URL, "srver=s"=>\$srv, "interface=s"=>\$mif);
+"verbose+"=>\$V, "url=s"=>\$URL, "server=s"=>\$srv, "interface=s"=>\$mif);
 $mif ||= (IO::Interface::Simple->interfaces)[1]; # get multicast interface if not defined
 $srv ||= (IO::Interface::Simple->new($mif))->address; # get '$srv' if not defined
-$/=1, say "# $m_a:$m_p $mif:$srv $URL" if $V;
+$/=1, say "# $mif/$m_a:$m_p $srv $URL" if $V;
 
 # listen new multicast $m_a:$m_p via $mif
 my $S=IO::Socket::Multicast->new(LocalPort=>$m_p, LocalAddr=>$m_a, ReuseAddr=>1) or die "$m_p $!";

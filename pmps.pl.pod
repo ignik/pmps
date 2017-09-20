@@ -33,13 +33,20 @@ This server listen multicast address 224.0.1.75,
 parse SUBSCRIBE packages and send send NOTIFY
 with configuration URL to phones.
 
-Default URL:
+Default provisionoing URL:
 http://$srv/pmps/?hw=$mod&fw=$ver&mac=$mac&ip=$ip
+can be changed by option -url
 
 =over 4
 
 =item B<srv>
-http server name or address, by default - server interface ip address.
+http server name or address. By default - server interface ip address.
+
+=back
+
+Next variables get values from SUBSCRIBE packet and may be used in URL:
+
+=over 4
 
 =item B<mod>
 Model of SIP phone

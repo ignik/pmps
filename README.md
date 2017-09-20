@@ -8,5 +8,5 @@ apt install libio-interface-perl # IO::Interface::Simple module
 # first start:
 ./pmps.pl -v -v # reboot phone and see led lights
 
-# god in help:
+# any questions:
 wireshark &

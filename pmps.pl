@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-use strict; use v5.20; # all perl scripts may be on one page sheet ;-)
+use strict; use v5.20; # all scripts must fit into a sheet
 use Pod::Usage; use Getopt::Long; use IO::Socket::Multicast; use IO::Interface::Simple;
 
 my $URL = 'http://$srv/pmps/?hw=$mod&fw=$ver&mac=$mac&ip=$ip';

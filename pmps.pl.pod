@@ -1,0 +1,61 @@
+=head1 NAME
+
+pmps.pl - IP Phone multicast provisioning server
+
+=head1 SYNOPSIS
+
+./pmps.pl [options]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-h help>
+Print the manual page and exits.
+
+=item B<-v verbose>
+Increase the level of verboseness on the console.
+
+=item B<-i interface>
+Set multicast lstener interface.
+
+=item B<-s server>
+http server name or ip address for URL.
+
+=item B<-u url>
+Set configuration URL for NOTIFY packet
+
+=back
+
+=head1 DESCRIPTION
+
+This server listen multicast address 224.0.1.75,
+parse SUBSCRIBE packages and send send NOTIFY
+with configuration URL to phones.
+
+Default URL:
+http://$srv/pmps/?hw=$mod&fw=$ver&mac=$mac&ip=$ip
+
+=over 4
+
+=item B<srv>
+http server name or address, by default - server interface ip address.
+
+=item B<mod>
+Model of SIP phone
+
+=item B<ver>
+Firmware revision
+
+=item B<mac>
+Phone mac address
+
+=item B<ip>
+Phone ip address
+
+=item B<lip>
+Phone local ip address
+
+=back
+
+=cut

@@ -2,8 +2,7 @@
 perl multicast sip phone provisioning server
 
 # installation:
-apt install libio-socket-multicast-perl # IO::Socket::Multicast
-apt install libio-interface-perl # IO::Interface::Simple module
+apt install libio-socket-multicast-perl libio-interface-perl # IO::Socket::Multicast IO::Interface::Simple module
 
 # first start:
 ./pmps.pl -v -v # reboot phone and see led lights

@@ -31,15 +31,15 @@ while(1) { # wait SUBSCRIBE packet
 	my $cseq = $p{cseq} + 1; # Send OK packet
 	my $T = IO::Socket::INET->new(Proto=>'udp', PeerAddr=>$p{ip}, PeerPort=>$m_p)
 		or die "Could not create socket $p{ip}:$m_p $!";
-	my $OK = join "\r\n", ('SIP/2.0 200 OK',$p{via},"Contact: <sip:$p{ip}:$m_p>", $p{to}, $p{from},
-		$p{cid}, "CSeq: $cseq SUBSCRIBE", 'Expires: 0', 'Content-Length: 0', '');
+	my $OK = join "\r\n", ('SIP/2.0 200 OK', "Contact: <sip:$p{ip}:$m_p>", 'Expires: 0',
+		$p{via}, $p{to}, $p{from}, $p{cid}, "CSeq: $cseq SUBSCRIBE", 'Content-Length: 0', '');
 	$T->send($OK) or warn "Can't send OK to $p{ip} $!"; print "# OK:\n$OK" if $V > 1;
 
 	$cseq++;	# Send NOTIFY packet
 	$URL =~ s { \$\{?([\w\-]+)\}? } { $p{$1}||'' }gex;	# rewrite $URL by %p keys/values
-	my $NFY = join "\r\n", ("NOTIFY sip:$p{ip}:$m_p SIP/2.0", $p{via}, 'Max-Forwards: 20', $p{to},
-		$p{from}, $p{cid}, "CSeq: $cseq NOTIFY", 'Content-Type: application/url', 
-		'Subscription-State: terminated;reason=timeout',
+	my $NFY = join "\r\n", ("NOTIFY sip:$p{ip}:$m_p SIP/2.0", 'Max-Forwards: 20',
+		$p{via}, $p{to}, $p{from}, $p{cid}, "CSeq: $cseq NOTIFY",
+		'Subscription-State: terminated;reason=timeout', 'Content-Type: application/url',
 		'Event: ua-profile;profile-type="device";vendor="OEM";model="OEM";version="1"',
 		'Content-Length: '.length($URL), '', $URL);
 	$T->send($NFY) or warn "Can't send NOTIFY to $p{ip} $!"; say "# NFY:\n$NFY" if $V > 1;

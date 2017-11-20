@@ -2,7 +2,7 @@
 use strict; use v5.20; # all scripts must fit into a sheet
 use Pod::Usage; use Getopt::Long; use IO::Socket::Multicast; use IO::Interface::Simple;
 
-my $URL = 'http://$srv/pmps/?hw=$mod&fw=$ver&mac=$mac&ip=$ip';
+my $URL = 'http://$srv/pmps/?pmps=$pmpsip&hw=$mod&fw=$ver&mac=$mac&ip=$ip';
 my ($m_a, $m_p, $size, $mif, $srv, $V) = ('224.0.1.75', 5060, 10240, '', '', 0);
 my %pat = ( mac=>'sip:MAC(.*?)\@', lip=>'Via: SIP.*? ([\d\.]+):', ven=>'vend.r="(.*?)"',
 mod=>'model="(.*?)"', ver=>'version="(.*?)"', to=>'^(To:.*?)$', from=>'^(From:.*?)$',
@@ -10,8 +10,9 @@ cid=>'^(Call-ID:.*?)$', via=>'^(Via:.*?)$', cseq=>'^CSeq: (\d+)' );
 
 GetOptions('help'=>sub{pod2usage(-input=>"$0.pod",-exitval=>0,-verbose=>2)},
 "verbose+"=>\$V, "url=s"=>\$URL, "server=s"=>\$srv, "interface=s"=>\$mif);
+my $myaddr = (IO::Interface::Simple->new($mif))->address; 
 $mif ||= (IO::Interface::Simple->interfaces)[1]; # get multicast interface if not defined
-$srv ||= (IO::Interface::Simple->new($mif))->address; # get '$srv' if not defined
+$srv ||= $myaddr; # get '$srv' if not defined
 $/=1, say "# $mif/$m_a:$m_p $srv $URL" if $V;
 
 # listen new multicast $m_a:$m_p via $mif
@@ -24,7 +25,7 @@ while(1) { # wait SUBSCRIBE packet
 	next unless $D =~ /^SUBSCRIBE sip:/; print $D if $V > 1;
 
 	# phone params, ip from socket (may be nat'ed)
-	my %p = (ip=>$S->peerhost, mif=>$mif, srv=>$srv); # all trash to hash
+	my %p = (ip=>$S->peerhost, mif=>$mif, srv=>$srv, pmpsip=>$myaddr); # all trash to hash
 	$p{$_} = ($D =~ /$pat{$_}/m) ? $1 : '' foreach keys %pat; # hack SUBSCRIBE to par's
 	say "# $p{mac} $p{lip} $p{ven} $p{mod} $p{ver} $p{cid}" if $V; # some debug about results
 
@@ -36,11 +37,11 @@ while(1) { # wait SUBSCRIBE packet
 	$T->send($OK) or warn "Can't send OK to $p{ip} $!"; print "# OK:\n$OK" if $V > 1;
 
 	$cseq++;	# Send NOTIFY packet
-	$URL =~ s { \$\{?([\w\-]+)\}? } { $p{$1}||'' }gex;	# rewrite $URL by %p keys/values
+	( my $U = $URL ) =~ s { \$\{?([\w\-]+)\}? } { $p{$1}||'' }gex;	# rewrite $URL by %p keys/values
 	my $NFY = join "\r\n", ("NOTIFY sip:$p{ip}:$m_p SIP/2.0", 'Max-Forwards: 20',
 		$p{via}, $p{to}, $p{from}, $p{cid}, "CSeq: $cseq NOTIFY",
 		'Subscription-State: terminated;reason=timeout', 'Content-Type: application/url',
 		'Event: ua-profile;profile-type="device";vendor="OEM";model="OEM";version="1"',
-		'Content-Length: '.length($URL), '', $URL);
+		'Content-Length: '.length($U), '', $U);
 	$T->send($NFY) or warn "Can't send NOTIFY to $p{ip} $!"; say "# NFY:\n$NFY" if $V > 1;
 }

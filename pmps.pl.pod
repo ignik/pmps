@@ -34,8 +34,11 @@ parse SUBSCRIBE packages and send send NOTIFY
 with configuration URL to phones.
 
 Default provisionoing URL:
-http://$srv/pmps/?hw=$mod&fw=$ver&mac=$mac&ip=$ip
+http://$srv/pmps/?pmps=$pmpsip&hw=$mod&fw=$ver&mac=$mac&ip=$ip
+
 can be changed by option -url
+
+All values in URL rewritten by special paramethers:
 
 =over 4
 
@@ -47,6 +50,9 @@ http server name or address. By default - server interface ip address.
 Next variables get values from SUBSCRIBE packet and may be used in URL:
 
 =over 4
+
+=item B<ven>
+phone vendor
 
 =item B<mod>
 Model of SIP phone
@@ -62,6 +68,9 @@ Phone ip address
 
 =item B<lip>
 Phone local ip address
+
+=item B<to, from, cid, via, cseq>
+NOTIFY message header fields
 
 =back
 

@@ -1,7 +1,9 @@
 #!/usr/bin/perl -w
 use strict;
+use File::Basename;
 use CGI qw(:all);
 undef $ENV{PATH};
+chdir dirname $0;
 
 sub bug ($) { print header, start_html, $_[0], end_html; exit; }
 my $hw = lc (param('hw') || ''); # onl

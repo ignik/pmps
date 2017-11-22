@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict; use v5.20; # all scripts must fit into a sheet
 use Pod::Usage; use Getopt::Long; use IO::Socket::Multicast; use IO::Interface::Simple;
+$|++; # autoflush stdout
 
 my $URL = 'http://$srv/pmps/?pmps=$pmpsip&hw=$mod&fw=$ver&mac=$mac&ip=$ip';
 my ($m_a, $m_p, $size, $mif, $srv, $V) = ('224.0.1.75', 5060, 10240, '', '', 0);

@@ -34,7 +34,7 @@ parse SUBSCRIBE packages and send send NOTIFY
 with configuration URL to phones.
 
 Default provisionoing URL:
-http://$srv/pmps/?pmps=$pmpsip&hw=$mod&fw=$ver&mac=$mac&ip=$ip
+http://$srv/pmps/?pmps=$pmpsip&hw=$mod&ver=$ver&mac=$mac&ip=$ip
 
 can be changed by option -url
 

@@ -10,7 +10,8 @@ chdir dirname $0;
 
 undef $ENV{PATH};
 
-sub bug ($) { print header, start_html, $_[0], end_html; exit; }
+sub bug ($) { print header, start_html, $_[0], end_html, "\n"; exit; }
 my $hw = lc ( param('hw') || '' );
 bug "incorrect hw $hw" unless $hw =~ /(\w[\w\-]*)/;	# must have letters
-( my $cmd = "$1/index.pl" ) ? exec ($cmd, @ARGV) : bug "No file $cmd";
+my $cmd = "$1/index.pl";
+$cmd ? exec ($cmd, @ARGV) : bug "No file $cmd";
